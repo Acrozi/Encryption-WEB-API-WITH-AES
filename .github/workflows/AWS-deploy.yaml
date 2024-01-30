@@ -37,3 +37,5 @@ jobs:
           version_label: ${{ github.run_id }}
           region: eu-north-1
           deployment_package: EncryptionAES.zip
+
+#re-run building
