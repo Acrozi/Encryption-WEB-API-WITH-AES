@@ -25,7 +25,7 @@ jobs:
         run: dotnet publish EncryptionAPI/EncryptionAPI.csproj -o EncryptionAPI/Published
 
       - name: Create zip package
-        run: cd EncryptionAPI/Published && zip -r ../../site.zip .
+        run: cd EncryptionAPI/Published && zip -r ../../EncryptionAES.zip .
 
       - name: Deploy to AWS EB
         uses: einaregilsson/beanstalk-deploy@v21
