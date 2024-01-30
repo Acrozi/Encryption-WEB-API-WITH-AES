@@ -1,0 +1,37 @@
+name: Build and push to AWS
+
+on:
+  push:
+    branches:
+      - '*'
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: '6.0'
+
+      - name: Build project  
+        run: dotnet restore EncryptionAPI/EncryptionAPI.csproj
+             dotnet publish EncryptionAPI/EncryptionAPI.csproj -o EncryptionAPI/EncryptionAPI;
+
+      - name: Create zip package
+        run: cd EncryptionAPI/EncryptionAPI; zip ../../Encryption-API.zip *;
+
+      - name: Deploy to AWS EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: DogsAPI
+          environment_name: DogsAPI-env
+          version_label: ${{ github.run_id }}
+          region: eu-north-1
+          deployment_package: EncryptionAPI.zip

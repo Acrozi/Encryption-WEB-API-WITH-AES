@@ -20,6 +20,11 @@ namespace AESWebAPI
             }
 
             using Aes aesAlg = Aes.Create();
+            if (aesAlg == null)
+            {
+                throw new CryptographicException("Failed to create AES algorithm instance.");
+            }
+
             aesAlg.Key = Encoding.UTF8.GetBytes(key);
             aesAlg.GenerateIV(); // Generate a random IV for each encryption operation
 
@@ -33,6 +38,11 @@ namespace AESWebAPI
 
             byte[] encryptedBytes = msEncrypt.ToArray();
             byte[] ivBytes = aesAlg.IV;
+
+            if (ivBytes == null || encryptedBytes == null)
+            {
+                throw new CryptographicException("Failed to generate IV or encrypted bytes.");
+            }
 
             // Combine IV and encrypted data into a single byte array
             byte[] resultBytes = new byte[ivBytes.Length + encryptedBytes.Length];
@@ -59,6 +69,11 @@ namespace AESWebAPI
                 byte[] resultBytes = Convert.FromBase64String(cipherText);
 
                 using Aes aesAlg = Aes.Create();
+                if (aesAlg == null)
+                {
+                    throw new CryptographicException("Failed to create AES algorithm instance.");
+                }
+
                 aesAlg.Key = Encoding.UTF8.GetBytes(key);
 
                 byte[] ivBytes = new byte[16]; // IV is the first 16 bytes of the encrypted data
