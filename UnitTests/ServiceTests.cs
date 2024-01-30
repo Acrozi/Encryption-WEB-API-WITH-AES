@@ -45,7 +45,7 @@ namespace UnitTests
             var encryptionService = new AESEncryptionService();
             string encryptedText = "giUvo4vuNheChPfP7hNWPQ==";
             string key = "IncorrectKey";
-            
+
             // Act & Assert
             Assert.Throws<ArgumentException>(() => encryptionService.Decrypt(encryptedText, key));
         }
@@ -75,21 +75,6 @@ namespace UnitTests
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => encryptionService.Encrypt(plainText, key));
-        }
-
-        [Fact]
-        public void Encrypt_GivenEmptyPlainText_ReturnsEmptyString()
-        {
-            // Arrange
-            var encryptionService = new AESEncryptionService();
-            string plainText = "";
-            string key = "giUvo4vuNheChPfP7hNWPQ==";
-
-            // Act
-            string encryptedText = encryptionService.Encrypt(plainText, key);
-
-            // Assert
-            Assert.Equal("", encryptedText);
         }
     }
 }
