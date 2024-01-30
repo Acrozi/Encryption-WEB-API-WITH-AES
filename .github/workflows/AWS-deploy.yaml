@@ -30,7 +30,7 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Encryption
-          environment_name: Encryption-env
+          environment_name: Encryption-env-1
           version_label: ${{ github.run_id }}
           region: eu-north-1
           deployment_package: site.zip
