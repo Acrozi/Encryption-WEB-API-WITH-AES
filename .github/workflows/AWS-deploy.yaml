@@ -1,7 +1,7 @@
 name: Build and push to AWS
 
 on:
-  pull_request:
+  push:
     branches:
       - '*'
     
@@ -18,12 +18,14 @@ jobs:
         with: 
           dotnet-version: '6.0'
 
-      - name: Build project  
+      - name: Restore project dependencies
         run: dotnet restore EncryptionAPI/EncryptionAPI.csproj
-             dotnet publish EncryptionAPI/EncryptionAPI.csproj -o EncryptionAPI/EncryptionAPI;
+
+      - name: Publish project
+        run: dotnet publish EncryptionAPI/EncryptionAPI.csproj -o EncryptionAPI/Published
 
       - name: Create zip package
-        run: cd EncryptionAPI/EncryptionAPI; zip ../../Encryption-API.zip *;
+        run: cd EncryptionAPI/Published && zip -r ../../site.zip .
 
       - name: Deploy to AWS EB
         uses: einaregilsson/beanstalk-deploy@v21
@@ -34,4 +36,4 @@ jobs:
           environment_name: DogsAPI-env
           version_label: ${{ github.run_id }}
           region: eu-north-1
-          deployment_package: EncryptionAPI.zip
+          deployment_package: EncryptionAES.zip
