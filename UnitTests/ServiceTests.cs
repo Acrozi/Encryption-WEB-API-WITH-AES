@@ -12,7 +12,7 @@ namespace UnitTests
             // Arrange
             var encryptionService = new AESEncryptionService();
             string plainText = "Hello, David!";
-            string key = "giUvo4vuNheChPfP7hNWPQ==";
+            string key = "0O7xrHlJpSSzuyGN2CIJOJI8FtKEyRtlFDrRWQijKJE=";
 
             // Act
             string encryptedText = encryptionService.Encrypt(plainText, key);
@@ -26,8 +26,8 @@ namespace UnitTests
         {
             // Arrange
             var encryptionService = new AESEncryptionService();
-            string encryptedText = "giUvo4vuNheChPfP7hNWPQ==";
-            string key = "1/y3hSibEgZwpf04";
+            string encryptedText = "CzlNn+jyFM3LopKTd3ru3xC5jdox1pzXcnQ6DoCHShY=";
+            string key = "0O7xrHlJpSSzuyGN2CIJOJI8FtKEyRtlFDrRWQijKJE=";
 
             // Act
             string decryptedText = encryptionService.Decrypt(encryptedText, key);
@@ -41,34 +41,35 @@ namespace UnitTests
         {
             // Arrange
             var encryptionService = new AESEncryptionService();
-            string encryptedText = "giUvo4vuNheChPfP7hNWPQ==";
-            string key = "IncorrectKey";
+            string encryptedText = "CzlNn+jyFM3LopKTd3ru3xC5jdox1pzXcnQ6DoCHShY=";
+            string key = "0O7xrs43OJKEyRtlFDrRWQijKJE=";
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => encryptionService.Decrypt(encryptedText, key));
         }
         
         [Fact]
-        public void Decrypt_GivenInvalidEncryptedText_ReturnsNull()
+        public void Decrypt_GivenInvalidEncryptedTextOrKey_ReturnsNull()
         {
-            // Arrange
-            var encryptionService = new AESEncryptionService();
-            string encryptedText = "InvalidEncryptedText";
-            string key = "giUvo4vuNheChPfP7hNWPQ==";
+        // Arrange
+        var encryptionService = new AESEncryptionService();
+        string encryptedText = "CzlNn+jydasKTd3ru3xC5jdox1pzXcnQ6DoCHShY=";
+        string key = "0O7xrHdasdassadasN2CIJOJI8FtKEyRtlFDrRWQijKJE=";
 
-            // Act
-            string decryptedText = encryptionService.Decrypt(encryptedText, key);
+        // Act
+        string decryptedText = encryptionService.Decrypt(encryptedText, key);
 
-            // Assert
-            Assert.Null(decryptedText);
+        // Assert
+        Assert.Null(decryptedText);
         }
+
         
         [Fact]
         public void Encrypt_GivenNullPlainText_ThrowsArgumentNullException()
         {
             // Arrange
             var encryptionService = new AESEncryptionService();
-            string plainText = null;
+            string plainText = "";
             string key = "giUvo4vuNheChPfP7hNWPQ==";
 
             // Act & Assert
