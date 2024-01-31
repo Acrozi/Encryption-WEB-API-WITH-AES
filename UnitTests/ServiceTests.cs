@@ -42,7 +42,7 @@ namespace UnitTests
             // Arrange
             var encryptionService = new AESEncryptionService();
             string encryptedText = "CzlNn+jyFM3LopKTd3ru3xC5jdox1pzXcnQ6DoCHShY=";
-            string key = "0O7xrHlJpSSzuyGN2CIJOJI8FtKEyRtlFDrRWQijKJE=";
+            string key = "0O7xrs43OJKEyRtlFDrRWQijKJE=";
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => encryptionService.Decrypt(encryptedText, key));
