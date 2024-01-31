@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 namespace AESWebAPI
 {
     public class Startup
@@ -19,7 +13,7 @@ namespace AESWebAPI
         {
             services.AddControllers();
 
-            // Lägg till din service för AES-kryptering
+            //Service för AES-kryptering
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
 
             // CORS-konfiguration
@@ -45,7 +39,7 @@ namespace AESWebAPI
 
             app.UseRouting();
 
-            // Använd CORS-policyen
+            // CORS-policyen
             app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
