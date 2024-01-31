@@ -19,7 +19,6 @@ namespace UnitTests
 
             // Assert
             Assert.NotNull(encryptedText);
-            // Add more assertions based on your encryption service functionality
         }
 
         [Fact]
@@ -35,7 +34,6 @@ namespace UnitTests
 
             // Assert
             Assert.NotNull(decryptedText);
-            // Add more assertions based on your encryption service functionality
         }
 
         [Fact]
