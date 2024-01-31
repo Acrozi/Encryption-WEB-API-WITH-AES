@@ -7,11 +7,13 @@ namespace AESWebAPI
 {
     public class AESEncryptionService : IAESEncryptionService
     {
-        private const int MinKeyLength = 16;
+        private const int KeyLengthBytes = 32; // 256-bitars nyckel
 
         public string Encrypt(string plainText, string key)
         {
             ValidateInput(plainText, key);
+
+            byte[] keyBytes = GenerateKeyBytes(key);
 
             using Aes aesAlg = Aes.Create();
             if (aesAlg == null)
@@ -19,8 +21,9 @@ namespace AESWebAPI
                 throw new CryptographicException("Failed to create AES algorithm instance.");
             }
 
-            aesAlg.Key = Encoding.UTF8.GetBytes(key);
-            aesAlg.GenerateIV(); 
+            aesAlg.KeySize = 256;
+            aesAlg.Key = keyBytes;
+            aesAlg.GenerateIV();
 
             ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
             using MemoryStream msEncrypt = new MemoryStream();
@@ -44,6 +47,8 @@ namespace AESWebAPI
         {
             ValidateInput(cipherText, key);
 
+            byte[] keyBytes = GenerateKeyBytes(key);
+
             try
             {
                 byte[] resultBytes = Convert.FromBase64String(cipherText);
@@ -54,7 +59,8 @@ namespace AESWebAPI
                     throw new CryptographicException("Failed to create AES algorithm instance.");
                 }
 
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
+                aesAlg.KeySize = 256;
+                aesAlg.Key = keyBytes;
 
                 byte[] ivBytes = new byte[16]; 
 
@@ -103,10 +109,19 @@ namespace AESWebAPI
                 throw new ArgumentNullException(nameof(key), "Encryption key cannot be null or empty.");
             }
 
-            if (key.Length < MinKeyLength)
+            if (key.Length < KeyLengthBytes)
             {
-                throw new ArgumentException(nameof(key), "Encryption key must be at least 16 characters long.");
+                throw new ArgumentException(nameof(key), $"Encryption key must be at least {KeyLengthBytes} characters long.");
             }
+        }
+
+        private byte[] GenerateKeyBytes(string key)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+
+            // Om nyckeln är kortare än 32 byte, fyll på med nollor
+            Array.Resize(ref keyBytes, KeyLengthBytes);
+            return keyBytes;
         }
     }
 }
