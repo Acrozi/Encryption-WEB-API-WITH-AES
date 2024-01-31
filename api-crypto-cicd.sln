@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EncryptionAPI", "EncryptionAPI\EncryptionAPI.csproj", "{CDCC73C1-6E6D-4FF2-94AF-6BFF490A1943}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CDCC73C1-6E6D-4FF2-94AF-6BFF490A1943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCC73C1-6E6D-4FF2-94AF-6BFF490A1943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCC73C1-6E6D-4FF2-94AF-6BFF490A1943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCC73C1-6E6D-4FF2-94AF-6BFF490A1943}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0249A0D4-3D56-4977-B7C1-BFC5C49B4011}
+	EndGlobalSection
+EndGlobal

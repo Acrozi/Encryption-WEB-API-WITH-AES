@@ -19,7 +19,11 @@ namespace AESWebAPI
         {
             services.AddControllers();
 
+<<<<<<< Updated upstream
             //Service för AES-kryptering
+=======
+            // service för AES-kryptering
+>>>>>>> Stashed changes
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
 
             // CORS-konfiguration
@@ -45,7 +49,7 @@ namespace AESWebAPI
 
             app.UseRouting();
 
-            // Använd CORS-policyen
+            // CORS-policyen
             app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
