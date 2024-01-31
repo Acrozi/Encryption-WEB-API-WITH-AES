@@ -45,7 +45,7 @@ namespace AESWebAPI
 
             app.UseRouting();
 
-            // Använd CORS-policyen
+            // CORS-policyen
             app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
