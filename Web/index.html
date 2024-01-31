@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Tool</title>
+</head>
+<body>
+    <h2>Encryption Tool</h2>
+
+    <div>
+        <label for="inputText">Enter Text to Encrypt:</label><br>
+        <textarea id="inputText" rows="4" cols="50"></textarea><br>
+        <button onclick="encrypt()">Encrypt</button>
+    </div>
+
+    <div id="encryptedTextDiv" style="display:none;">
+        <label for="encryptedText">Encrypted Text:</label><br>
+        <textarea id="encryptedText" rows="4" cols="50" readonly></textarea><br>
+        <label for="encryptionKey">Encryption Key:</label><br>
+        <input type="text" id="encryptionKey" readonly><br>
+        <a id="encryptedLink" href="#" target="_blank">Click here to see encrypted text</a><br>
+    </div>
+
+    <div>
+        <label for="inputHash">Enter Encrypted Hash to Decrypt:</label><br>
+        <textarea id="inputHash" rows="4" cols="50"></textarea><br>
+        <label for="decryptionKey">Enter Encryption Key:</label><br>
+        <input type="text" id="decryptionKey"><br>
+        <button onclick="decrypt()">Decrypt</button>
+    </div>
+
+    <div id="decryptedTextDiv" style="display:none;">
+        <label for="decryptedText">Decrypted Text:</label><br>
+        <textarea id="decryptedText" rows="4" cols="50" readonly></textarea><br>
+    </div>
+
+    <div>
+        <label for="keySize">Choose Key Size:</label>
+        <select id="keySize">
+            <option value="128">128 bits</option>
+            <option value="192">192 bits</option>
+            <option value="256">256 bits</option>
+        </select>
+    </div>
+
+    <script>
+        function encrypt() {
+            var inputText = document.getElementById("inputText").value.trim(); // Trim whitespace
+
+            if (!inputText) {
+                alert("Please enter text to encrypt.");
+                return; // Stop execution if input is null
+            }
+
+            var keySize = document.getElementById("keySize").value;
+            var apiUrl = "http://encryption-env-1.eba-m35udmdr.eu-north-1.elasticbeanstalk.com/encryption/encrypt"; // Replace with your API URL
+
+            // Generate a random key of the specified size
+            var key = generateKey(keySize);
+
+            // Send a GET request to the API server
+            fetch(apiUrl + "?key=" + key + "&plaintext=" + inputText)
+            .then(response => response.json())
+            .then(data => {
+                // Update HTML with the encrypted text and keys from the API response
+                document.getElementById("encryptedText").value = data.encryptedText;
+                document.getElementById("encryptionKey").value = key;
+                document.getElementById("encryptedLink").href = data.link;
+                document.getElementById("encryptedTextDiv").style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function decrypt() {
+    var inputHash = document.getElementById("inputHash").value;
+    var decryptionKey = document.getElementById("decryptionKey").value.trim(); // Trim whitespace
+
+    if (!inputHash || !decryptionKey) {
+        alert("Please enter encrypted hash and decryption key.");
+        return; // Stop execution if input is null
+    }
+
+    var apiUrl = "http://encryption-env-1.eba-m35udmdr.eu-north-1.elasticbeanstalk.com/encryption/decrypt"; // Replace with your API URL
+
+    // Send a GET request to the API server
+    fetch(apiUrl + "?key=" + decryptionKey + "&ciphertext=" + inputHash)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Invalid key or ciphertext');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Update HTML with the decrypted text from the API response
+        document.getElementById("decryptedText").value = data.decryptedText;
+        document.getElementById("decryptedTextDiv").style.display = "block";
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: Invalid key or ciphertext');
+    });
+}
+
+
+        function generateKey(keySize) {
+            // Generate a random key of the specified size
+            var key = "";
+            var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+            for (var i = 0; i < keySize / 8; i++) {
+                key += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return key;
+        }
+    </script>
+</body>
+</html>
