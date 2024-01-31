@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -5,17 +7,11 @@ namespace AESWebAPI
 {
     public class AESEncryptionService : IAESEncryptionService
     {
+        private const int MinKeyLength = 16;
+
         public string Encrypt(string plainText, string key)
         {
-            if (string.IsNullOrEmpty(plainText))
-            {
-                throw new ArgumentNullException(nameof(plainText), "Input text cannot be null or empty.");
-            }
-
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key), "Encryption key cannot be null or empty.");
-            }
+            ValidateInput(plainText, key);
 
             using Aes aesAlg = Aes.Create();
             if (aesAlg == null)
@@ -24,7 +20,7 @@ namespace AESWebAPI
             }
 
             aesAlg.Key = Encoding.UTF8.GetBytes(key);
-            aesAlg.GenerateIV(); // Generate a random IV for each encryption operation
+            aesAlg.GenerateIV(); 
 
             ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
             using MemoryStream msEncrypt = new MemoryStream();
@@ -37,12 +33,6 @@ namespace AESWebAPI
             byte[] encryptedBytes = msEncrypt.ToArray();
             byte[] ivBytes = aesAlg.IV;
 
-            if (ivBytes == null || encryptedBytes == null)
-            {
-                throw new CryptographicException("Failed to generate IV or encrypted bytes.");
-            }
-
-            // Combine IV and encrypted data into a single byte array
             byte[] resultBytes = new byte[ivBytes.Length + encryptedBytes.Length];
             Buffer.BlockCopy(ivBytes, 0, resultBytes, 0, ivBytes.Length);
             Buffer.BlockCopy(encryptedBytes, 0, resultBytes, ivBytes.Length, encryptedBytes.Length);
@@ -52,15 +42,7 @@ namespace AESWebAPI
 
         public string Decrypt(string cipherText, string key)
         {
-            if (string.IsNullOrEmpty(cipherText))
-            {
-                throw new ArgumentNullException(nameof(cipherText), "Encrypted text cannot be null or empty.");
-            }
-
-            if (string.IsNullOrEmpty(key) || key.Length < 16)
-            {
-                throw new ArgumentException(nameof(key), "Encryption key must be at least 16 characters long.");
-            }
+            ValidateInput(cipherText, key);
 
             try
             {
@@ -74,7 +56,7 @@ namespace AESWebAPI
 
                 aesAlg.Key = Encoding.UTF8.GetBytes(key);
 
-                byte[] ivBytes = new byte[16]; // IV is the first 16 bytes of the encrypted data
+                byte[] ivBytes = new byte[16]; 
 
                 if (resultBytes.Length < ivBytes.Length)
                 {
@@ -106,6 +88,24 @@ namespace AESWebAPI
             {
                 Console.WriteLine($"An error occurred during decryption: {ex.Message}");
                 return null;
+            }
+        }
+
+        private void ValidateInput(string text, string key)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentNullException(nameof(text), "Input text cannot be null or empty.");
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key), "Encryption key cannot be null or empty.");
+            }
+
+            if (key.Length < MinKeyLength)
+            {
+                throw new ArgumentException(nameof(key), "Encryption key must be at least 16 characters long.");
             }
         }
     }
