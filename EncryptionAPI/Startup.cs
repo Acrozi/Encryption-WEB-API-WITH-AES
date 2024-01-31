@@ -19,7 +19,7 @@ namespace AESWebAPI
         {
             services.AddControllers();
 
-            // Lägg till din service för AES-kryptering
+            //Service för AES-kryptering
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
 
             // CORS-konfiguration
