@@ -1,6 +1,7 @@
 # Individuell examination CI/CD
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 01-29 Created basic Encrypting program logic
 
 For encryption use endpoint:
@@ -17,6 +18,9 @@ To-do:
 
 Web connected to API on elastic beanstalk and key generation with JS
 
+=======
+# 01-29 Created basic AES Encrypting WEB-API logic 
+>>>>>>> Stashed changes
 =======
 # 01-29 Created basic AES Encrypting WEB-API logic 
 >>>>>>> Stashed changes

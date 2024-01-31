@@ -20,7 +20,11 @@ namespace AESWebAPI
             services.AddControllers();
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             //Service för AES-kryptering
+=======
+            // service för AES-kryptering
+>>>>>>> Stashed changes
 =======
             // service för AES-kryptering
 >>>>>>> Stashed changes

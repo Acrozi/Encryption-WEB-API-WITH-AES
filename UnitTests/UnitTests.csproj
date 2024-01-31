@@ -2,14 +2,20 @@
 
   <PropertyGroup>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
 =======
+=======
+>>>>>>> Stashed changes
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
     <AdditionalUsings>global using Xunit;</AdditionalUsings>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     
   </PropertyGroup>
