@@ -24,7 +24,7 @@ namespace AESWebAPI
             }
 
             aesAlg.Key = Encoding.UTF8.GetBytes(key);
-            aesAlg.GenerateIV(); // Generate a random IV for each encryption operation
+            aesAlg.GenerateIV(); 
 
             ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
             using MemoryStream msEncrypt = new MemoryStream();
@@ -42,7 +42,6 @@ namespace AESWebAPI
                 throw new CryptographicException("Failed to generate IV or encrypted bytes.");
             }
 
-            // Combine IV and encrypted data into a single byte array
             byte[] resultBytes = new byte[ivBytes.Length + encryptedBytes.Length];
             Buffer.BlockCopy(ivBytes, 0, resultBytes, 0, ivBytes.Length);
             Buffer.BlockCopy(encryptedBytes, 0, resultBytes, ivBytes.Length, encryptedBytes.Length);
