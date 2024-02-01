@@ -1,41 +1,81 @@
-<!-- HTML-koden -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encryption Tool</title>
+    <title>AES Encryption/Decryption</title>
 </head>
 <body>
-    <h2>Encryption Tool</h2>
+    <h1>AES Encryption/Decryption</h1>
+    <label for="inputText">Input Text:</label><br>
+    <textarea id="inputText" rows="4" cols="50"></textarea><br>
+    <label for="encryptionKey">Encryption Key:</label><br>
+    <input type="text" id="encryptionKey"><br>
+    <button onclick="encryptText()">Encrypt</button>
+    <button onclick="decryptText()">Decrypt</button><br><br>
+    <label for="outputText">Output Text:</label><br>
+    <textarea id="outputText" rows="4" cols="50"></textarea>
 
-    <div>
-        <label for="inputText">Enter Text to Encrypt:</label><br>
-        <textarea id="inputText" rows="4" cols="50"></textarea><br>
-        <button onclick="encrypt()">Encrypt</button>
-    </div>
+    <script>
+        const apiUrl = 'http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption';
 
-    <div id="encryptedTextDiv" style="display:none;">
-        <label for="encryptedText">Encrypted Text:</label><br>
-        <textarea id="encryptedText" rows="4" cols="50" readonly></textarea><br>
-        <label for="encryptionKey">Encryption Key:</label><br>
-        <input type="text" id="encryptionKey" readonly><br>
-        <a id="encryptedLink" href="#" target="_blank">Click here to see encrypted text</a><br>
-    </div>
+        async function encryptText() {
+            const inputText = document.getElementById('inputText').value;
+            const encryptionKey = document.getElementById('encryptionKey').value;
 
-    <div>
-        <label for="inputHash">Enter Encrypted Hash to Decrypt:</label><br>
-        <textarea id="inputHash" rows="4" cols="50"></textarea><br>
-        <label for="decryptionKey">Enter Encryption Key:</label><br>
-        <input type="text" id="decryptionKey"><br>
-        <button onclick="decrypt()">Decrypt</button>
-    </div>
+            if (!inputText || !encryptionKey) {
+                alert('Input text and encryption key are required!');
+                return;
+            }
 
-    <div id="decryptedTextDiv" style="display:none;">
-        <label for="decryptedText">Decrypted Text:</label><br>
-        <textarea id="decryptedText" rows="4" cols="50" readonly></textarea><br>
-    </div>
+            try {
+                const response = await fetch(apiUrl + '/encrypt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        plainText: inputText,
+                        key: encryptionKey
+                    })
+                });
 
-    <script src="script.js"></script>
+                const encryptedText = await response.text();
+                document.getElementById('outputText').value = encryptedText;
+            } catch (error) {
+                console.error('Error encrypting text:', error);
+                alert('Error encrypting text. Please check the console for details.');
+            }
+        }
+
+        async function decryptText() {
+            const inputText = document.getElementById('inputText').value;
+            const encryptionKey = document.getElementById('encryptionKey').value;
+
+            if (!inputText || !encryptionKey) {
+                alert('Input text and encryption key are required!');
+                return;
+            }
+
+            try {
+                const response = await fetch(apiUrl + '/decrypt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        encryptedText: inputText,
+                        key: encryptionKey
+                    })
+                });
+
+                const decryptedText = await response.text();
+                document.getElementById('outputText').value = decryptedText;
+            } catch (error) {
+                console.error('Error decrypting text:', error);
+                alert('Error decrypting text. Please check the console for details.');
+            }
+        }
+    </script>
 </body>
 </html>
