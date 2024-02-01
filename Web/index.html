@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" />
-    <title>AES Encryption/Decryption</title>
+    <title>Encryption Tool</title>
 </head>
 <body>
-    <div class="container">
-        <h1>AES Encryption/Decryption</h1>
+    <h2>Encryption Tool</h2>
 
-        <div>
-            <h2>Encryption</h2>
-            <label class="label-block" for="inputText">Input Text:</label><br>
-            <textarea id="inputText" class="input-box" rows="4" cols="50"></textarea><br>
-            <button class="button" onclick="generateKey()">Generate Key</button><br><br>
-            <label class="label-block" for="encryptionKey">Encryption Key:</label><br>
-            <input type="text" id="encryptionKey" class="input-box" readonly><br><br>
-            <button class="button" onclick="encryptText()">Encrypt</button><br><br>
-            <label class="label-block" for="encryptedText">Encrypted Text:</label><br>
-            <textarea id="encryptedText" class="input-box" rows="4" cols="50" readonly></textarea><br><br>
-        </div>
-
-        <div>
-            <h2>Decryption</h2>
-            <label class="label-block" for="encryptedInput">Encrypted Text:</label><br>
-            <textarea id="encryptedInput" class="input-box" rows="4" cols="50"></textarea><br>
-            <label class="label-block" for="decryptionKey">Decryption Key:</label><br>
-            <input type="text" id="decryptionKey" class="input-box"><br><br>
-            <button class="button" onclick="decryptText()">Decrypt</button><br><br>
-            <label class="label-block" for="decryptedText">Decrypted Text:</label><br>
-            <textarea id="decryptedText" class="input-box" rows="4" cols="50" readonly></textarea>
-        </div>
+    <div>
+        <label for="inputText">Enter Text to Encrypt:</label><br>
+        <textarea id="inputText" rows="4" cols="50"></textarea><br>
+        <button onclick="encrypt()">Encrypt</button>
     </div>
+
+    <div id="encryptedTextDiv" style="display:none;">
+        <label for="encryptedText">Encrypted Text:</label><br>
+        <textarea id="encryptedText" rows="4" cols="50" readonly></textarea><br>
+        <label for="encryptionKey">Encryption Key:</label><br>
+        <input type="text" id="encryptionKey" readonly><br>
+        <a id="encryptedLink" href="#" target="_blank">Click here to see encrypted text</a><br>
+    </div>
+
+    <div>
+        <label for="inputHash">Enter Encrypted Hash to Decrypt:</label><br>
+        <textarea id="inputHash" rows="4" cols="50"></textarea><br>
+        <label for="decryptionKey">Enter Encryption Key:</label><br>
+        <input type="text" id="decryptionKey"><br>
+        <button onclick="decrypt()">Decrypt</button>
+    </div>
+
+    <div id="decryptedTextDiv" style="display:none;">
+        <label for="decryptedText">Decrypted Text:</label><br>
+        <textarea id="decryptedText" rows="4" cols="50" readonly></textarea><br>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
