@@ -10,16 +10,25 @@ namespace KeyGenerationAPI.Controllers
         [HttpGet]
         public IActionResult GenerateKey()
         {
-            // Generera en kryptografiskt stark nyckel (32 byte)
-            byte[] keyBytes = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            try
             {
-                rng.GetBytes(keyBytes);
-            }
-            string key = Convert.ToBase64String(keyBytes);
+                // Skapa en AES-nyckel med en specifik storlek (256 bitar)
+                using (Aes aes = Aes.Create())
+                {
+                    aes.KeySize = 256;
+                    aes.GenerateKey();
 
-            // Returnera nyckeln som svar
-            return Ok(new { Key = key });
+                    // Konvertera den genererade nyckeln till en base64-sträng
+                    string base64Key = Convert.ToBase64String(aes.Key);
+
+                    // Returnera nyckeln som svar
+                    return Ok(new { Key = base64Key });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
