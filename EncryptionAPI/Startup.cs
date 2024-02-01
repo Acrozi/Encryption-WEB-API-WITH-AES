@@ -11,9 +11,10 @@ namespace AESWebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Controllers för MVC
             services.AddControllers();
 
-            //Service för AES-kryptering
+            // Service för AES-kryptering som en Singleton
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
 
             // CORS-konfiguration
@@ -23,9 +24,9 @@ namespace AESWebAPI
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyOrigin() // Tillåt alla ursprung
+                            .AllowAnyMethod() // Tillåt alla metoder (GET, POST, PUT, etc.)
+                            .AllowAnyHeader(); // Tillåt alla rubriker
                     });
             });
         }
@@ -34,14 +35,17 @@ namespace AESWebAPI
         {
             if (env.IsDevelopment())
             {
+                // Visa detaljerad felinformation i utvecklingsmiljön
                 app.UseDeveloperExceptionPage();
             }
 
+            // Aktivera routing
             app.UseRouting();
 
-            // CORS-policyen
+            // Använd CORS-policyen "AllowAll"
             app.UseCors("AllowAll");
 
+            // Slutpunkt för controllers
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
