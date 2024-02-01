@@ -1,4 +1,3 @@
-// JavaScript-koden
 function encrypt() {
     var inputText = document.getElementById("inputText").value.trim(); // Trim whitespace
 
@@ -7,24 +6,36 @@ function encrypt() {
         return; // Stop execution if input is null
     }
 
-    var key = generateKey(); // Generera nyckeln
+    var apiUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/key";
 
-    var apiUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/encrypt";
-
-    // Skicka en GET-begäran till API-servern
-    fetch(apiUrl + "?key=" + key + "&plaintext=" + inputText)
+    // Skicka en GET-begäran till API-servern för att hämta nyckeln
+    fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
-        // Uppdatera HTML med den krypterade texten och nyckeln från API-svaret
-        document.getElementById("encryptedText").value = data.encryptedText;
-        document.getElementById("encryptionKey").value = key;
-        document.getElementById("encryptedLink").href = data.link;
-        document.getElementById("encryptedTextDiv").style.display = "block";
+        var key = data.key; // Hämta nyckeln från JSON-svaret
+
+        var encryptUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/encrypt";
+
+        // Skicka en GET-begäran till API-servern för att kryptera texten med den hämtade nyckeln
+        fetch(encryptUrl + "?key=" + key + "&plaintext=" + inputText)
+        .then(response => response.json())
+        .then(data => {
+            // Uppdatera HTML med den krypterade texten och nyckeln från API-svaret
+            document.getElementById("encryptedText").value = data.encryptedText;
+            document.getElementById("encryptionKey").value = key;
+            document.getElementById("encryptedLink").href = data.link;
+            document.getElementById("encryptedTextDiv").style.display = "block";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     })
     .catch(error => {
         console.error('Error:', error);
+        alert('An error occurred while fetching the key.');
     });
 }
+
 
 function decrypt() {
     var inputHash = document.getElementById("inputHash").value;
@@ -37,7 +48,7 @@ function decrypt() {
 
     var apiUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/decrypt";
 
-    // Skicka en GET-begäran till API-servern
+    // Skicka en GET-begäran till API-servern för att dekryptera texten
     fetch(apiUrl + "?key=" + decryptionKey + "&ciphertext=" + inputHash)
     .then(response => {
         if (!response.ok) {
@@ -54,16 +65,4 @@ function decrypt() {
         console.error('Error:', error);
         alert('Error: Invalid key or ciphertext');
     });
-}
-
-function generateKey() {
-    var keySize = 256; // Önskad nyckellängd i bitar
-    var key = "";
-    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
-    // Generera nyckeln med exakt 32 bytes (256 bitar)
-    for (var i = 0; i < keySize / 8; i++) {
-        key += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return key;
 }
