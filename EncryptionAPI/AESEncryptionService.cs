@@ -15,32 +15,32 @@ namespace AESWebAPI
 
             byte[] keyBytes = GenerateKeyBytes(key);
 
-            using Aes aesAlg = Aes.Create();
-            if (aesAlg == null)
+            using (Aes aesAlg = Aes.Create())
             {
-                throw new CryptographicException("Failed to create AES algorithm instance.");
+                aesAlg.KeySize = 256;
+                aesAlg.Key = keyBytes;
+                aesAlg.GenerateIV();
+
+                aesAlg.Mode = CipherMode.CBC; // Ange läge för blockchiffer
+
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    msEncrypt.Write(BitConverter.GetBytes(aesAlg.IV.Length), 0, sizeof(int));
+                    msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                    }
+
+                    byte[] encryptedBytes = msEncrypt.ToArray();
+                    return Convert.ToBase64String(encryptedBytes);
+                }
             }
-
-            aesAlg.KeySize = 256;
-            aesAlg.Key = keyBytes;
-            aesAlg.GenerateIV();
-
-            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-            using MemoryStream msEncrypt = new MemoryStream();
-            using CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-            {
-                swEncrypt.Write(plainText);
-            }
-
-            byte[] encryptedBytes = msEncrypt.ToArray();
-            byte[] ivBytes = aesAlg.IV;
-
-            byte[] resultBytes = new byte[ivBytes.Length + encryptedBytes.Length];
-            Buffer.BlockCopy(ivBytes, 0, resultBytes, 0, ivBytes.Length);
-            Buffer.BlockCopy(encryptedBytes, 0, resultBytes, ivBytes.Length, encryptedBytes.Length);
-
-            return Convert.ToBase64String(resultBytes);
         }
 
         public string Decrypt(string cipherText, string key)
@@ -51,36 +51,36 @@ namespace AESWebAPI
 
             try
             {
-                byte[] resultBytes = Convert.FromBase64String(cipherText);
+                byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
 
-                using Aes aesAlg = Aes.Create();
-                if (aesAlg == null)
+                using (Aes aesAlg = Aes.Create())
                 {
-                    throw new CryptographicException("Failed to create AES algorithm instance.");
+                    aesAlg.KeySize = 256;
+                    aesAlg.Key = keyBytes;
+                    aesAlg.Mode = CipherMode.CBC; // Ange läge för blockchiffer
+
+                    int ivLength = BitConverter.ToInt32(cipherTextBytes, 0);
+                    byte[] iv = new byte[ivLength];
+
+                    Array.Copy(cipherTextBytes, sizeof(int), iv, 0, ivLength);
+                    byte[] cipherTextData = new byte[cipherTextBytes.Length - ivLength - sizeof(int)];
+                    Array.Copy(cipherTextBytes, ivLength + sizeof(int), cipherTextData, 0, cipherTextData.Length);
+
+                    aesAlg.IV = iv;
+
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherTextData))
+                    {
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        {
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                return srDecrypt.ReadToEnd();
+                            }
+                        }
+                    }
                 }
-
-                aesAlg.KeySize = 256;
-                aesAlg.Key = keyBytes;
-
-                byte[] ivBytes = new byte[16]; 
-
-                if (resultBytes.Length < ivBytes.Length)
-                {
-                    throw new CryptographicException("Invalid encrypted data.");
-                }
-
-                byte[] encryptedBytes = new byte[resultBytes.Length - ivBytes.Length];
-
-                Buffer.BlockCopy(resultBytes, 0, ivBytes, 0, ivBytes.Length);
-                Buffer.BlockCopy(resultBytes, ivBytes.Length, encryptedBytes, 0, encryptedBytes.Length);
-
-                aesAlg.IV = ivBytes;
-
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-                using MemoryStream msDecrypt = new MemoryStream(encryptedBytes);
-                using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-                using StreamReader srDecrypt = new StreamReader(csDecrypt);
-                return srDecrypt.ReadToEnd();
             }
             catch (FormatException)
             {

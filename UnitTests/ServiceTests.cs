@@ -26,8 +26,8 @@ namespace UnitTests
         {
             // Arrange
             var encryptionService = new AESEncryptionService();
-            string encryptedText = "CzlNn+jyFM3LopKTd3ru3xC5jdox1pzXcnQ6DoCHShY=";
-            string key = "0O7xrHlJpSSzuyGN2CIJOJI8FtKEyRtlFDrRWQijKJE=";
+            string encryptedText = "EAAAALA+o44GAkbjWatLYn4mJafO3BvXlkKZIuTAsi4Hnw9HJ3DceUzXR160CqHVv/XQ+4QVtDAgu20zJw9NN/SbJEc=";
+            string key = "gFubQy3yW4WXeyEQ1pryrTmZTp+O4ADm9b+VCCbO+fI=";
 
             // Act
             string decryptedText = encryptionService.Decrypt(encryptedText, key);

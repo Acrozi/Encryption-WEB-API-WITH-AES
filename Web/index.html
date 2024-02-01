@@ -1,3 +1,4 @@
+<!-- HTML-koden -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,7 @@
     <div>
         <label for="inputText">Enter Text to Encrypt:</label><br>
         <textarea id="inputText" rows="4" cols="50"></textarea><br>
-        <button onclick="">Encrypt</button>
+        <button onclick="encrypt()">Encrypt</button>
     </div>
 
     <div id="encryptedTextDiv" style="display:none;">
@@ -23,12 +24,18 @@
     </div>
 
     <div>
-        <label for="keySize">Choose Key Size:</label>
-        <select id="keySize">
-            <option value="128">128 bits</option>
-            <option value="192">192 bits</option>
-            <option value="256">256 bits</option>
-        </select>
+        <label for="inputHash">Enter Encrypted Hash to Decrypt:</label><br>
+        <textarea id="inputHash" rows="4" cols="50"></textarea><br>
+        <label for="decryptionKey">Enter Encryption Key:</label><br>
+        <input type="text" id="decryptionKey"><br>
+        <button onclick="decrypt()">Decrypt</button>
     </div>
+
+    <div id="decryptedTextDiv" style="display:none;">
+        <label for="decryptedText">Decrypted Text:</label><br>
+        <textarea id="decryptedText" rows="4" cols="50" readonly></textarea><br>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
