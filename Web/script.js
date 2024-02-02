@@ -1,68 +1,58 @@
-function encrypt() {
-    var inputText = document.getElementById("inputText").value.trim(); // Trim whitespace
-
-    if (!inputText) {
-        alert("Please enter text to encrypt.");
-        return; // Stop execution if input is null
+async function generateKey() {
+    try {
+        const response = await fetch('http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/key');
+        const data = await response.json();
+        document.getElementById('encryptionKey').value = data.key;
+    } catch (error) {
+        console.error('Error generating key:', error);
+        alert('Error generating key. Please check the console for details.');
     }
-
-    var apiUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/key";
-
-    // Skicka en GET-begäran till API-servern för att hämta nyckeln
-    fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-        var key = data.key; // Hämta nyckeln från JSON-svaret
-
-        var encryptUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/encrypt";
-
-        // Skicka en GET-begäran till API-servern för att kryptera texten med den hämtade nyckeln
-        fetch(encryptUrl + "?key=" + key + "&plaintext=" + inputText)
-        .then(response => response.json())
-        .then(data => {
-            // Uppdatera HTML med den krypterade texten och nyckeln från API-svaret
-            document.getElementById("encryptedText").value = data.encryptedText;
-            document.getElementById("encryptionKey").value = key;
-            document.getElementById("encryptedLink").href = data.link;
-            document.getElementById("encryptedTextDiv").style.display = "block";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while fetching the key.');
-    });
 }
 
+async function encryptText() {
+    const inputText = document.getElementById('inputText').value;
+    const encryptionKey = document.getElementById('encryptionKey').value;
 
-function decrypt() {
-    var inputHash = document.getElementById("inputHash").value;
-    var decryptionKey = document.getElementById("decryptionKey").value.trim(); // Trim whitespace
+    try {
+        const response = await fetch('http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/encrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                plaintext: inputText,
+                key: encryptionKey
+            })
+        });
 
-    if (!inputHash || !decryptionKey) {
-        alert("Please enter encrypted hash and decryption key.");
-        return; // Stop execution if input is null
+        const data = await response.json();
+        document.getElementById('encryptedText').value = data.encryptedText;
+    } catch (error) {
+        console.error('Error encrypting text:', error);
+        alert('Error encrypting text. Please check the console for details.');
     }
+}
 
-    var apiUrl = "http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/decrypt";
+async function decryptText() {
+    const encryptedText = document.getElementById('encryptedInput').value;
+    const decryptionKey = document.getElementById('decryptionKey').value;
 
-    // Skicka en GET-begäran till API-servern för att dekryptera texten
-    fetch(apiUrl + "?key=" + decryptionKey + "&ciphertext=" + inputHash)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Invalid key or ciphertext');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Uppdatera HTML med den dekrypterade texten från API-svaret
-        document.getElementById("decryptedText").value = data.decryptedText;
-        document.getElementById("decryptedTextDiv").style.display = "block";
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error: Invalid key or ciphertext');
-    });
+    try {
+        const response = await fetch('http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/decrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ciphertext: encryptedText,
+                key: decryptionKey
+            })
+        });
+
+        const data = await response.json();
+        document.getElementById('decryptedText').value = data.decryptedText;
+    } catch (error) {
+        console.error('Error decrypting text:', error);
+        alert('Error decrypting text. Please check the console for details.');
+    }
 }

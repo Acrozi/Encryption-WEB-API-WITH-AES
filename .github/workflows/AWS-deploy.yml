@@ -1,9 +1,9 @@
 name: Build and push to AWS
 
 on:
-  pull_request:
+  push:
     branches:
-      - '*'
+      - main
     
 jobs:
   build:

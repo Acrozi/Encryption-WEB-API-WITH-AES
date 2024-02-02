@@ -13,18 +13,44 @@ namespace AESWebAPI.Controllers
             _encryptionService = encryptionService;
         }
 
-        [HttpGet("encrypt")]
-        public IActionResult Encrypt([FromQuery] string plaintext, [FromQuery] string key)
+        [HttpPost("encrypt")]
+        public IActionResult Encrypt([FromBody] EncryptionRequest request)
         {
-            var encryptedText = _encryptionService.Encrypt(plaintext, key);
-            return Ok(new { encryptedText });
+            try
+            {
+                var encryptedText = _encryptionService.Encrypt(request.PlainText, request.Key);
+                return Ok(new { EncryptedText = encryptedText });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("decrypt")]
-        public IActionResult Decrypt([FromQuery] string ciphertext, [FromQuery] string key)
+        [HttpPost("decrypt")]
+        public IActionResult Decrypt([FromBody] DecryptionRequest request)
         {
-            var decryptedText = _encryptionService.Decrypt(ciphertext, key);
-            return Ok(new { decryptedText });
+            try
+            {
+                var decryptedText = _encryptionService.Decrypt(request.CipherText, request.Key);
+                return Ok(new { DecryptedText = decryptedText });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+    }
+
+    public class EncryptionRequest
+    {
+        public string PlainText { get; set; }
+        public string Key { get; set; }
+    }
+
+    public class DecryptionRequest
+    {
+        public string CipherText { get; set; }
+        public string Key { get; set; }
     }
 }
