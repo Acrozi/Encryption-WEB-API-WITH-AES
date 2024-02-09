@@ -32,24 +32,29 @@ namespace AESWebAPI
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+        if (env.IsDevelopment())
         {
-            if (env.IsDevelopment())
-            {
-                // Visa detaljerad felinformation i utvecklingsmiljön
-                app.UseDeveloperExceptionPage();
-            }
-
-            // Aktivera routing
-            app.UseRouting();
-
-            // Använd CORS-policyen "AllowAll"
-            app.UseCors("AllowAll");
-
-            // Slutpunkt för controllers
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseDeveloperExceptionPage();
         }
+        else
+        {
+            app.UseExceptionHandler("/error");
+        }
+
+        app.UseDefaultFiles(); // Tala om för ASP.NET Core att använda standardfiler
+        app.UseStaticFiles(); // Tala om för ASP.NET Core att tillhandahålla statiska filer
+
+        app.UseRouting();
+
+        app.UseCors("AllowAll");
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapFallbackToFile("index.html"); // Hantera alla andra förfrågningar med index.html
+        });
+    }
+
     }
 }
