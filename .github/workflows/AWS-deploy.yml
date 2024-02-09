@@ -39,4 +39,4 @@ jobs:
           region: eu-north-1
           deployment_package: EncryptionAES.zip
 
-#re-run building
+#re-run building again
