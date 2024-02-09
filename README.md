@@ -2,19 +2,16 @@
 
 AES encryption and decryption WEB API
 
-01-29 Created basic Encrypting program logic
+Use https://www.andreymsh.se/encryption/ to encrypt/decrypt
 
-For encryption use endpoint:
+For est secure connections between uses CloudFront. 
 
-http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/encrypt?key=6TzgI/g7Qlg1EZzzYIZR4g==&plaintext=YOUR_TEXT
+ElasticBeans -env uses HTTPS and HTTP traffic enforces to HTTPS.
 
-For decryption:
 
-http://encryptionapi-env.eba-mp8gwi3q.eu-north-1.elasticbeanstalk.com/encryption/decrypt?key=6TzgI/g7Qlg1EZzzYIZR4g==/YOUR_ENCRYPTED_TEXT
 
-"6TzgI/g7Qlg1EZzzYIZR4g==" is a key
+INFO:
 
-To-do:
+http://api-encryption.eu-north-1.elasticbeanstalk.com/ (main ElasticBeans env server)
 
-Web connected to API on elastic beanstalk and key generation with JS
-
+https://d3qq1t4yottxdj.cloudfront.net/ (CloudFront url for HTTPS, talks with BeansTalk load balancer)
