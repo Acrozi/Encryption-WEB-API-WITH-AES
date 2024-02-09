@@ -33,10 +33,10 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: API
-          environment_name: API-env
+          application_name: Api-Encryption
+          environment_name: Api-Encryption-env
           version_label: ${{ github.run_id }}
           region: eu-north-1
           deployment_package: EncryptionAES.zip
 
-#re-run building again
+#re-run deployment to AWS
