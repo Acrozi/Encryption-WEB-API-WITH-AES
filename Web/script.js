@@ -1,7 +1,7 @@
 async function generateKey() {
     try {
-        const response = await fetch('https://d1puq2udk6k8ca.cloudfront.net/key');
-        const data = await response.json();keyandrey-msh.se
+        const response = await fetch('https://d3qq1t4yottxdj.cloudfront.net/key');
+        const data = await response.json();
         document.getElementById('encryptionKey').value = data.key;
     } catch (error) {
         console.error('Error generating key:', error);
@@ -20,7 +20,7 @@ async function encryptText() {
     }
 
     try {
-        const response = await fetch('https://d1puq2udk6k8ca.cloudfront.net/encryption/encrypt', {
+        const response = await fetch('https://d3qq1t4yottxdj.cloudfront.net/encryption/encrypt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ async function decryptText() {
     }
 
     try {
-        const response = await fetch('https://d1puq2udk6k8ca.cloudfront.net/encryption/decrypt', {
+        const response = await fetch('https://d3qq1t4yottxdj.cloudfront.net/encryption/decrypt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
